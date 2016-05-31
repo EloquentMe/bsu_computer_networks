@@ -99,7 +99,9 @@ int main(int argc, char** argv)
         }
         server_addr.sin_addr.s_addr = addr;
 
-        pthread_create(NULL, NULL, &ListenBroadcastProc, NULL);
+        pthread_t thread;
+
+        pthread_create(&thread, NULL, &ListenBroadcastProc, NULL);
 
         while (1)
         {
