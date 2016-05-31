@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <memory.h>
@@ -91,12 +92,12 @@ int main(int argc, char** argv)
     if (strcmp(basename(argv[0]), "client") == 0)
     {
         printf("Running as client.\n");
-        if ((server_addr.sin_addr.s_addr = inet_aton(argv[1])) == INADDR_NONE)
-        {
+        in_addr_t addr;
+        if ((addr = inet_addr(argv[1])) == INADDR_NONE) {
             perror("Invalid server address");
             exit(EXIT_FAILURE);
-
         }
+        server_addr.sin_addr.s_addr = addr;
 
         pthread_create(NULL, NULL, &ListenBroadcastProc, NULL);
 
