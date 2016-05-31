@@ -26,8 +26,6 @@ int main(int argc, char** argv)
     }
     int sock;
     int val = 1;
-    sockaddr client_addr; //optional?
-    memset(&client_addr, 0, sizeof(client_addr));
     sockaddr addr;
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
