@@ -19,12 +19,12 @@ void* ListenBroadcastProc(void * arg)
 {
 	int sock;
 	char msg[buf_size];
-	int val = 1; 
+	unsigned int val = 1;
 	struct sockaddr_in other_addr, me_addr;
 	memset(&other_addr, 0, sizeof(other_addr));
-	struct hostent *host;
+	//struct hostent *host;
 
-	host = gethostbyname("localhost");
+	//host = gethostbyname("localhost");
 
 	me_addr.sin_family = AF_INET;
 	me_addr.sin_port   = htons(client_port);
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
     broadcast_addr.sin_addr.s_addr = htonl(0x7fffffff);
 
     int sock;
-    int val = 1;
+    unsigned int val = 1;
     if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
     {
         perror("Failed to create socket");
@@ -135,6 +135,7 @@ int main(int argc, char** argv)
         printf("Running as server.\n");
         while (1)
         {
+            val = sizeof(client_addr);
             int ret = recvfrom(sock, msg, sizeof(msg), 0, (struct sockaddr*) &client_addr, &val);
             if (ret < 0)
             {
