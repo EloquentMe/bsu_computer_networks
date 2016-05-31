@@ -1,5 +1,5 @@
 FILES=main.c
-CFLAGS=-g -pthread
+CFLAGS=-g -pthread -Wall
 
 all: server client
 
