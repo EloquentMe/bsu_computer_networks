@@ -48,15 +48,18 @@ void* ListenBroadcastProc(void * arg)
 		exit(EXIT_FAILURE);
 	}
 	while (1) {
-		int ret = recvfrom(sock, msg, sizeof(msg), 0, (struct sockaddr *) &other_addr, &val);
+		val = sizeof(other_addr);
+		int ret = recvfrom(sock, &msg, sizeof(msg), 0, (struct sockaddr *) &other_addr, &val);
 		if (ret < 0)
 		{
 			perror( "Failed to read datagram from server" );
 			exit(EXIT_FAILURE);
 		}
-		strtok(msg, "\n");
+		msg[buf_size-1] = 0;
+
+		//strtok(msg, "\n");
 		printf( "%s\n", msg);  /* output client's data buffer  */
-		printf("> ");
+		//printf("> ");
 	}
 	return 0;
 }
@@ -147,11 +150,15 @@ int main(int argc, char** argv)
             else if (ret == 0)
                 break;
             printf("%s\n", msg);
-            
+
             char broadcast_msg[buf_size];
-            sprintf(msg, "%s:%d > %s", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), msg);
-            ret = sendto(sock, broadcast_msg, strlen(broadcast_msg), 0,\
-                        (struct sockaddr *) &broadcast_addr, sizeof(server_addr));
+            sprintf(broadcast_msg, "%s:%d > %s", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), msg);
+            ret = sendto(sock,
+                         broadcast_msg,
+                         strnlen(broadcast_msg, buf_size),
+                         0,
+                         (struct sockaddr *) &broadcast_addr,
+                         sizeof(broadcast_addr));
             if (ret < 0)
             {
                 printf("Failed to broadcast");
